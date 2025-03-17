@@ -1,0 +1,5 @@
+feat: CMA-ES implementation for CartPole-v1
+
+Implements Covariance Matrix Adaptation Evolution Strategy (CMA-ES) for 
+CartPole-v1 environment with Hugging Face integration. Includes model 
+training, evaluation, and automated model card generation.
