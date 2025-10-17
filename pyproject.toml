@@ -47,5 +47,7 @@ include = ["harpertoken*"]
 harpertoken = ["*.py"]
 
 [tool.ruff]
-line-length = 40
+line-length = 88
+
+[tool.ruff.lint]
 select = ["E", "F", "N"]
