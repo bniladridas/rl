@@ -28,6 +28,13 @@ dependencies = [
     "matplotlib>=3.0.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "ruff>=0.1.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/harpertoken/harpertoken-cartpole"
 Repository = "https://github.com/harpertoken/harpertoken-cartpole"
