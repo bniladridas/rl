@@ -1,0 +1,4 @@
+numpy
+gymnasium
+cma
+huggingface-hub

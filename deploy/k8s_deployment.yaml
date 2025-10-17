@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rl-optimizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rl-optimizer
+  template:
+    metadata:
+      labels:
+        app: rl-optimizer
+    spec:
+      containers:
+      - name: rl-optimizer
+        image: harpertoken/harpertoken-cartpole:latest
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rl-optimizer-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8000
+  selector:
+    app: rl-optimizer
