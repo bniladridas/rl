@@ -2,7 +2,6 @@ import numpy as np
 import gymnasium as gym
 from huggingface_hub import hf_hub_download
 from huggingface_hub import ModelHubMixin
-import json
 import os
 from pathlib import Path
 from typing import Optional, Dict, Union
@@ -10,15 +9,31 @@ from typing import Optional, Dict, Union
 class CMAESAgent(ModelHubMixin):
     def __init__(self, env_name="CartPole-v1"):
         super().__init__()
+        self.env_name = env_name
         self.env = gym.make(env_name)
         self.observation_space = self.env.observation_space.shape[0]
-        self.action_space = self.env.action_space.n
+        if isinstance(self.env.action_space, gym.spaces.Discrete):
+            self.action_type = 'discrete'
+            self.num_actions = self.env.action_space.n
+            self.action_space = self.num_actions
+        elif isinstance(self.env.action_space, gym.spaces.Box):
+            self.action_type = 'continuous'
+            self.action_dim = self.env.action_space.shape[0]
+            self.action_bounds = (self.env.action_space.low, self.env.action_space.high)
+            self.action_space = self.action_dim
+        else:
+            raise ValueError("Unsupported action space type")
         self.weights = None
 
     def get_action(self, state):
-        weights_matrix = self.weights.reshape(self.observation_space, self.action_space)
-        action_scores = np.dot(state, weights_matrix)
-        return int(np.argmax(action_scores))
+        if self.action_type == 'discrete':
+            weights_matrix = self.weights.reshape(self.observation_space, self.num_actions)
+            action_scores = np.dot(state, weights_matrix)
+            return int(np.argmax(action_scores))
+        elif self.action_type == 'continuous':
+            weights_matrix = self.weights.reshape(self.observation_space, self.action_dim)
+            action = np.dot(state, weights_matrix)
+            return np.clip(action, self.action_bounds[0], self.action_bounds[1])
 
     def evaluate(self, num_episodes=100, render=False):
         total_rewards = []
@@ -42,11 +57,18 @@ class CMAESAgent(ModelHubMixin):
         """Save model weights"""
         os.makedirs(save_directory, exist_ok=True)
         save_path = os.path.join(save_directory, "model.npy")
-        np.save(save_path, {
+        data = {
             'weights': self.weights,
             'observation_space': self.observation_space,
-            'action_space': self.action_space
-        })
+            'action_type': self.action_type,
+            'env_name': self.env_name
+        }
+        if self.action_type == 'discrete':
+            data['num_actions'] = self.num_actions
+        elif self.action_type == 'continuous':
+            data['action_dim'] = self.action_dim
+            data['action_bounds'] = self.action_bounds
+        np.save(save_path, data)
 
     @classmethod
     def _from_pretrained(
@@ -86,6 +108,16 @@ class CMAESAgent(ModelHubMixin):
         model_data = np.load(model_path, allow_pickle=True).item()
         model.weights = model_data['weights']
         model.observation_space = model_data['observation_space']
-        model.action_space = model_data['action_space']
+        model.action_type = model_data['action_type']
+        model.env_name = model_data.get('env_name', None)
+        if model.env_name is not None:
+            model.env = gym.make(model.env_name)
+        if model.action_type == 'discrete':
+            model.num_actions = model_data['num_actions']
+            model.action_space = model.num_actions
+        elif model.action_type == 'continuous':
+            model.action_dim = model_data['action_dim']
+            model.action_bounds = model_data['action_bounds']
+            model.action_space = model.action_dim
         
         return model

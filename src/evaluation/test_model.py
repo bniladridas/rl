@@ -43,7 +43,7 @@ class CMAESAgent(ModelHubMixin):
         try:
             if hasattr(self, 'env'):
                 self.env.close()
-        except:
+        except Exception:
             pass
 
     def load_model(self, path):

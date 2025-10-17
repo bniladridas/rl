@@ -1,7 +1,6 @@
 import cma
 import numpy as np
 from ..models.model import CMAESAgent
-import gymnasium as gym
 
 def train_cmaes(num_generations=100, population_size=16):
     agent = CMAESAgent()

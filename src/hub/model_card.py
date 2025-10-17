@@ -1,4 +1,4 @@
-from huggingface_hub import ModelCard, ModelCardData, upload_file
+from huggingface_hub import ModelCard, ModelCardData
 from huggingface_hub import HfApi
 import os
 

@@ -1,5 +1,4 @@
 import gymnasium as gym
-import numpy as np
 import pandas as pd
 
 def generate_cartpole_data(num_episodes=100):
