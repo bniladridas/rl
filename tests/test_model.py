@@ -74,12 +74,11 @@ def test_pretrained_usage_syntax():
         from src.models.model import CMAESAgent
         agent = CMAESAgent.from_pretrained("harpertoken/harpertoken-cartpole")
         from src.evaluation.test_model import test_model
-        # Note: test_model will render, but for syntax validation, we just call it briefly
-        # In a real test, you might want to mock or skip rendering
-        # For now, just check that the functions can be called without error
-        assert callable(agent.get_action)
-        assert callable(test_model)
-        # To avoid rendering in tests, we don't call test_model(agent, num_episodes=5)
-        # But the syntax import and callability is validated
+        # Now call the exact syntax: test_model(agent, num_episodes=5)
+        # Use render=False to avoid GUI issues in tests
+        result = test_model(agent, num_episodes=5, render=False)
+        # The function returns the average reward, so check it's a float
+        assert isinstance(result, float)
+        assert result > 0  # Should perform well
     except Exception as e:
         pytest.skip(f"Syntax validation failed or model not available: {e}")

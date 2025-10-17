@@ -125,8 +125,18 @@ def test_model(agent, num_episodes=5, render=True):
     """
     Standalone function to test a CMAESAgent model.
     This allows importing and calling test_model(agent, num_episodes=5)
+    Works with both old and generalized agents.
     """
-    return agent.test_model(num_episodes=num_episodes, render=render)
+    if hasattr(agent, 'test_model'):
+        # Old agent with test_model method
+        return agent.test_model(num_episodes=num_episodes, render=render)
+    elif hasattr(agent, 'evaluate'):
+        # Generalized agent with evaluate method
+        mean_reward, std_reward = agent.evaluate(num_episodes=num_episodes, render=render)
+        print(f"\nAverage Reward over {num_episodes} episodes: {mean_reward:.2f}")
+        return mean_reward
+    else:
+        raise AttributeError("Agent must have either 'test_model' or 'evaluate' method")
 
 if __name__ == "__main__":
     # Test the model
