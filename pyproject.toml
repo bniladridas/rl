@@ -3,9 +3,9 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "harpertoken"
+name = "harpertoken-cartpole"
 version = "0.1.0"
-description = "CMA-ES RL Agent for Gymnasium Environments"
+description = "This model solves CartPole-v1 using CMA-ES with a linear policy."
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.8"
@@ -29,16 +29,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0",
-    "ruff>=0.1.0",
-]
+ dev = [
+     "pytest>=7.0.0",
+     "pytest-asyncio>=0.21.0",
+     "ruff>=0.1.0",
+     "pre-commit>=3.0.0",
+ ]
 
 [project.urls]
-Homepage = "https://github.com/harpertoken/harpertoken-cartpole"
-Repository = "https://github.com/harpertoken/harpertoken-cartpole"
-Issues = "https://github.com/harpertoken/harpertoken-cartpole/issues"
+HuggingFace = "https://huggingface.co/harpertoken/harpertoken-cartpole"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -46,3 +45,7 @@ include = ["harpertoken*"]
 
 [tool.setuptools.package-data]
 harpertoken = ["*.py"]
+
+[tool.ruff]
+line-length = 40
+select = ["E", "F", "N"]

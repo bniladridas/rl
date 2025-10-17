@@ -1,0 +1,15 @@
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.1.6
+  hooks:
+  - id: ruff
+    args: [--fix]
+  - id: ruff-format
+- repo: local
+  hooks:
+  - id: commit-msg
+    name: Check commit message
+    entry: scripts/commit-msg-hook.sh
+    language: system
+    stages: [commit-msg]
+    pass_filenames: false
