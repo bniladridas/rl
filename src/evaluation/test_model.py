@@ -121,6 +121,13 @@ class CMAESAgent(ModelHubMixin):
             if render:
                 self.env.close()
 
+def test_model(agent, num_episodes=5, render=True):
+    """
+    Standalone function to test a CMAESAgent model.
+    This allows importing and calling test_model(agent, num_episodes=5)
+    """
+    return agent.test_model(num_episodes=num_episodes, render=render)
+
 if __name__ == "__main__":
     # Test the model
     agent = CMAESAgent("CartPole-v1")
