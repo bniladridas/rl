@@ -12,11 +12,11 @@ spec:
       labels:
         app: rl-optimizer
     spec:
-      containers:
-      - name: rl-optimizer
-        image: harpertoken/harpertoken-cartpole:latest
-        ports:
-        - containerPort: 8000
+       containers:
+       - name: rl-optimizer
+         image: ghcr.io/bniladridas/rl:main
+         ports:
+         - containerPort: 8000
 ---
 apiVersion: v1
 kind: Service

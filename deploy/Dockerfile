@@ -9,8 +9,11 @@ COPY pyproject.toml .
 COPY harpertoken/ harpertoken/
 COPY README.md .
 
-# Install the package
-RUN pip install --no-cache-dir -e .
+# Install the package and Flask
+RUN pip install --no-cache-dir -e . flask
 
-# Default command: run a simple test
-CMD ["python", "-c", "from harpertoken.models.model import CMAESAgent; agent = CMAESAgent.from_pretrained('harpertoken/harpertoken-cartpole'); print('Model loaded successfully!')"]
+# Copy the app
+COPY deploy/app.py .
+
+# Default command: run the Flask app
+CMD ["python", "app.py"]
