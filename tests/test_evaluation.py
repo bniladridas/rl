@@ -1,5 +1,5 @@
 import pytest
-from src.models.model import CMAESAgent
+from harpertoken.models.model import CMAESAgent
 import numpy as np
 
 def test_evaluate(capsys):

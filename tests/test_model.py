@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from src.models.model import CMAESAgent
+from harpertoken.models.model import CMAESAgent
 
 def test_cmaes_agent_init():
     agent = CMAESAgent()
@@ -71,9 +71,9 @@ def test_pretrained_usage_syntax():
     # Test the exact syntax provided by the user
     # Validates if the syntax works (loads model and tests it)
     try:
-        from src.models.model import CMAESAgent
+        from harpertoken.models.model import CMAESAgent
         agent = CMAESAgent.from_pretrained("harpertoken/harpertoken-cartpole")
-        from src.evaluation.test_model import test_model
+        from harpertoken.evaluation.test_model import test_model
         # Now call the exact syntax: test_model(agent, num_episodes=5)
         # Use render=False to avoid GUI issues in tests
         result = test_model(agent, num_episodes=5, render=False)

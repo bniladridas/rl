@@ -92,7 +92,7 @@ This model implements a CartPole agent trained using the CMA-ES (Covariance Matr
 ## Usage
 
 ```python
-from src.models.model import CMAESAgent
+from harpertoken.models.model import CMAESAgent
 
 # Load the model
 agent = CMAESAgent.from_pretrained("harpertoken/harpertoken-cartpole")
