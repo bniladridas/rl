@@ -67,6 +67,7 @@ coverage.xml
 .hypothesis/
 
 # Project specific
+harpertoken.egg-info/
 plots/*.png
 model_weights.npy
 *.npy
