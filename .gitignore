@@ -69,6 +69,7 @@ coverage.xml
 # Project specific
 plots/*.png
 model_weights.npy
+*.npy
 *.log
 .env
 .DS_Store

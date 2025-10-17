@@ -16,7 +16,8 @@ def push_to_hub():
         create_repo(repo_id, exist_ok=True)
         
         # Load and prepare model
-        weights = np.load("cartpole_cmaes/model.npy", allow_pickle=True)
+        model_data = np.load("cmaes_model.npy", allow_pickle=True).item()
+        weights = model_data['weights']
         
         # Initialize agent with the environment name
         agent = CMAESAgent(env_name="CartPole-v1")

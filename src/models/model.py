@@ -105,19 +105,31 @@ class CMAESAgent(ModelHubMixin):
             )
             
         # Load the model data
-        model_data = np.load(model_path, allow_pickle=True).item()
-        model.weights = model_data['weights']
-        model.observation_space = model_data['observation_space']
-        model.action_type = model_data['action_type']
-        model.env_name = model_data.get('env_name', None)
-        if model.env_name is not None:
+        loaded = np.load(model_path, allow_pickle=True)
+        if isinstance(loaded, np.ndarray) and loaded.ndim > 0:
+            # Assume it's the weights array (for HF models)
+            model.weights = loaded
+            # Assume CartPole-v1 for HF models
+            model.env_name = "CartPole-v1"
             model.env = gym.make(model.env_name)
-        if model.action_type == 'discrete':
-            model.num_actions = model_data['num_actions']
+            model.observation_space = model.env.observation_space.shape[0]
+            model.action_type = 'discrete'
+            model.num_actions = model.env.action_space.n
             model.action_space = model.num_actions
-        elif model.action_type == 'continuous':
-            model.action_dim = model_data['action_dim']
-            model.action_bounds = model_data['action_bounds']
-            model.action_space = model.action_dim
+        else:
+            # Dict format
+            model_data = loaded.item()
+            model.weights = model_data['weights']
+            model.observation_space = model_data['observation_space']
+            model.action_type = model_data['action_type']
+            model.env_name = model_data.get('env_name', "CartPole-v1")
+            model.env = gym.make(model.env_name)
+            if model.action_type == 'discrete':
+                model.num_actions = model_data['num_actions']
+                model.action_space = model.num_actions
+            elif model.action_type == 'continuous':
+                model.action_dim = model_data['action_dim']
+                model.action_bounds = model_data['action_bounds']
+                model.action_space = model.action_dim
         
         return model

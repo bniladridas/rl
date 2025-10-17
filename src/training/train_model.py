@@ -22,8 +22,8 @@ class CMAESTrainer:
         
         # CMA-ES parameters
         self.sigma = 0.5  # Initial step size
-        self.population_size = 16  # Population size
-        self.max_iterations = 100  # Maximum number of iterations
+        self.population_size = 4  # Population size (reduced for quick test)
+        self.max_iterations = 5  # Maximum number of iterations (reduced for quick test)
         
         # Initialize CMA-ES optimizer
         self.es = CMAEvolutionStrategy(
