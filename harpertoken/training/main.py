@@ -3,6 +3,7 @@ import numpy as np
 import torch
 from cma import CMAEvolutionStrategy
 
+
 class CMAESAgent:
     def __init__(self, env_name):
         self.env = gym.make(env_name)
@@ -18,20 +19,22 @@ class CMAESAgent:
                 total_reward = self.run_episode(param)
                 rewards.append(total_reward)
             self.es.tell(params, rewards)
-            
+
             mean_reward = np.mean(rewards)
-            print(f"Iteration {iteration + 1}/{num_iterations}, Mean Reward: {mean_reward:.2f}")
+            print(
+                f"Iter {iteration + 1}/{num_iterations}, Mean Reward: {mean_reward:.2f}"
+            )
 
     def run_episode(self, param):
         obs, _ = self.env.reset()
         total_reward = 0
         terminated = truncated = False
-        
+
         while not (terminated or truncated):
             action = np.argmax(param)
             obs, reward, terminated, truncated, _ = self.env.step(action)
             total_reward += reward
-            
+
         return total_reward
 
     def save_model(self, path):
@@ -40,6 +43,7 @@ class CMAESAgent:
             print(f"Model saved to {path}")
         except Exception as e:
             print(f"Error saving model: {e}")
+
 
 if __name__ == "__main__":
     # Train the model

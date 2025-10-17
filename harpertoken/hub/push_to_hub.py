@@ -4,43 +4,44 @@ from ..models.model import CMAESAgent
 import numpy as np
 from datetime import datetime
 
+
 def push_to_hub():
     # Initialize API
     api = HfApi()
-    
+
     # Repository details
     repo_id = "harpertoken/harpertoken-cartpole"
-    
+
     try:
         # Create or get repository
         create_repo(repo_id, exist_ok=True)
-        
+
         # Load and prepare model
         model_data = np.load("cmaes_model.npy", allow_pickle=True).item()
-        weights = model_data['weights']
-        
+        weights = model_data["weights"]
+
         # Initialize agent with the environment name
         agent = CMAESAgent(env_name="CartPole-v1")
         agent.weights = weights  # Directly assign the weights array
-        
+
         # Evaluate model for metadata
         mean_reward, std_reward = agent.evaluate(num_episodes=10)
-        
+
         # Convert numpy values to Python scalars
         mean_reward = float(mean_reward)
         std_reward = float(std_reward)
-        
+
         # Save model locally
         os.makedirs("temp_model", exist_ok=True)
         np.save("temp_model/model.npy", weights)
-        
+
         # Push model file
         api.upload_file(
             path_or_fileobj="temp_model/model.npy",
             path_in_repo="model.npy",
-            repo_id=repo_id
+            repo_id=repo_id,
         )
-        
+
         # Create model card with metadata
         model_card = f"""---
 language: en
@@ -72,7 +73,8 @@ model-index:
 
 # CartPole CMA-ES Agent
 
-This model implements a CartPole agent trained using the CMA-ES (Covariance Matrix Adaptation Evolution Strategy) algorithm.
+This model implements a CartPole agent trained using the CMA-ES
+(Covariance Matrix Adaptation Evolution Strategy) algorithm.
 
 ## Model Description
 
@@ -128,17 +130,15 @@ The agent was trained using the CMA-ES algorithm with the following specificatio
    howpublished = {{\\url{{https://huggingface.co/harpertoken/harpertoken-cartpole}}}}
 }}
 ```"""
-        
+
         # Write and upload README/model card
         with open("README.md", "w") as f:
             f.write(model_card)
-        
+
         api.upload_file(
-            path_or_fileobj="README.md",
-            path_in_repo="README.md",
-            repo_id=repo_id
+            path_or_fileobj="README.md", path_in_repo="README.md", repo_id=repo_id
         )
-        
+
         # Update repository metadata using the correct function
         metadata_update(
             repo_id=repo_id,
@@ -147,33 +147,45 @@ The agent was trained using the CMA-ES algorithm with the following specificatio
                 "library_name": "custom",
                 "language": "en",
                 "license": "mit",
-                "model-index": [{
-                    "name": "CartPole-CMA-ES",
-                    "results": [{
-                        "task": {
-                            "type": "reinforcement-learning",
-                            "name": "CartPole-v1"
-                        },
-                        "dataset": {
-                            "name": "gymnasium/CartPole-v1",
-                            "type": "gymnasium"
-                        },
-                        "metrics": [{
-                            "type": "mean_reward",
-                            "value": mean_reward,
-                            "name": "Mean Reward"
-                        }]
-                    }]
-                }]
-            }
+                "model-index": [
+                    {
+                        "name": "CartPole-CMA-ES",
+                        "results": [
+                            {
+                                "task": {
+                                    "type": "reinforcement-learning",
+                                    "name": "CartPole-v1",
+                                },
+                                "dataset": {
+                                    "name": "gymnasium/CartPole-v1",
+                                    "type": "gymnasium",
+                                },
+                                "metrics": [
+                                    {
+                                        "type": "mean_reward",
+                                        "value": mean_reward,
+                                        "name": "Mean Reward",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                ],
+            },
         )
-        
+
         print(f"Successfully uploaded model and metadata to {repo_id}")
-        
+
     except Exception as e:
         print(f"Error during model upload or metadata update: {e}")
         print("Current working directory:", os.getcwd())
-        print("Available files in cartpole_cmaes:", os.listdir("cartpole_cmaes") if os.path.exists("cartpole_cmaes") else "Directory not found")
+        print(
+            "Available files in cartpole_cmaes:",
+            os.listdir("cartpole_cmaes")
+            if os.path.exists("cartpole_cmaes")
+            else "Directory not found",
+        )
+
 
 if __name__ == "__main__":
     push_to_hub()

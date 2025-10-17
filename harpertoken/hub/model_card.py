@@ -13,7 +13,7 @@ if os.path.exists(plot_path):
         path_or_fileobj=plot_path,
         path_in_repo="assets/training_convergence.png",
         repo_id=REPO_ID,
-        repo_type="model"
+        repo_type="model",
     )
     print(f"Successfully uploaded {plot_path} to {REPO_ID}")
 else:
@@ -37,13 +37,17 @@ card = ModelCard("# CartPole-v1 CMA-ES Solution\n\n")
 
 # Model Summary with Training Convergence Graph
 card.text += """
-This model provides a solution to the CartPole-v1 environment using CMA-ES (Covariance Matrix Adaptation Evolution Strategy), 
-achieving perfect performance with a simple linear policy. The implementation demonstrates how evolutionary strategies can 
-effectively solve classic control problems with minimal architecture complexity.
+This model provides a solution to the CartPole-v1 environment using CMA-ES
+(Covariance Matrix Adaptation Evolution Strategy), achieving perfect performance
+with a simple linear policy. The implementation demonstrates how evolutionary
+strategies can effectively solve classic control problems with minimal
+architecture complexity.
 
 ### Training Convergence
 ![Training Convergence](assets/training_convergence.png)
-*Figure: Training convergence showing the mean fitness (episode length) across generations. The model achieves optimal performance (500 steps) within 3 generations.*
+*Figure: Training convergence showing the mean fitness (episode length) across
+generations. The model achieves optimal performance (500 steps) within 3
+generations.*
 
 ## Model Details
 
