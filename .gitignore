@@ -25,6 +25,7 @@ MANIFEST
 venv/
 .venv/
 venv_new/
+venv312/
 ENV/
 
 # IDEs and editors
